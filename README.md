@@ -28,14 +28,14 @@ flowchart LR
 
 | Metric | Value | Status |
 | :--- | :--- | :--- |
-| **PDK / Standard Cells** | `gf180mcuD` / `gf180mcu_fd_sc_mcu7t5v0` | — |
-| **Target Clock / Period** | `50 MHz` (`20.0 ns`) | — |
-| **Peak On-Chip Throughput** | `6.4 Gbps` (`128-bit × 50 MHz`) | — |
-| **Die Area** | `945,812 µm²` (`0.946 mm²`) | — |
-| **Core Area** | `900,980 µm²` (`0.901 mm²`) | — |
-| **Instance Count** | `44,345` cells | — |
-| **Core Utilization** | `56.85%` | — |
-| **Total Wirelength** | `982,324 µm` | — |
+| **PDK / Standard Cells** | `gf180mcuD` / `gf180mcu_fd_sc_mcu7t5v0` | CONFIGURED |
+| **Target Clock / Period** | `50 MHz` (`20.0 ns`) | TARGET |
+| **Peak On-Chip Throughput** | `6.4 Gbps` (`128-bit × 50 MHz`) | VERIFIED |
+| **Die Area** | `945,812 µm²` (`0.946 mm²`) | HARDENED |
+| **Core Area** | `900,980 µm²` (`0.901 mm²`) | HARDENED |
+| **Instance Count** | `44,345` cells | PLACED |
+| **Core Utilization** | `56.85%` | TARGET MET |
+| **Total Wirelength** | `982,324 µm` | ROUTED |
 | **Setup WNS (`nom_tt_025C_5v00`)** | `0.000 ns` | PASS |
 | **Hold WNS (`nom_tt_025C_5v00`)** | `0.000 ns` | PASS |
 | **Magic DRC** | `0` errors | PASS |
