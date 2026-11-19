@@ -65,3 +65,12 @@ make -C tb SIM=verilator
 ```bash
 nix run --extra-experimental-features "nix-command flakes" github:librelane/librelane -- --pdk gf180mcuD librelane/config.json
 ```
+
+## Release Roadmap
+
+| Version | Target Date | Scope | Status |
+| :--- | :--- | :--- | :--- |
+| `v1.0.0` | Nov 20, 2026 | 128-bit AXI4-Stream 6G baseband TX, Cocotb dual-sim, `gf180mcuD` GDSII @ 50 MHz | RELEASED |
+| `v1.1.0` | Nov 27, 2026 | Post-PnR Gate-Level Simulation (GLS) in CI + `ss_125C_4v50` slow-corner closure | PLANNED |
+| `v1.2.0` | Dec 4, 2026 | 32-bit/16-bit-to-128-bit I/O gearbox for QFN-48/64 pinout | PLANNED |
+| `v2.0.0` | Dec 18, 2026 | `gf180mcu_fd_io` padframe integration & MPW shuttle tapeout package | PLANNED |
