@@ -1,29 +1,60 @@
 # gf180-6g-baseband-tx
 
+[[https://github.com/nk-verif-labs/gf180-6g-baseband-tx/actions/workflows/ci.yml/badge.svg]](https://github.com/nk-verif-labs/gf180-6g-baseband-tx/actions/workflows/ci.yml)
+
 **6.4 Gbps On-Chip 6G Baseband & High-Throughput Data-Transfer Engine** targeting **GlobalFoundries GF180MCU (`gf180mcuD`)** via **LibreLane**.
 
+[assets/tx_6g_baseband_top.png]
+
 ## Architecture Overview
-- **Top Module:** `tx_6g_baseband_top`
-- **Clock & Throughput:** `50 MHz` (`20.0 ns` period) × `128-bit` AXI4-Stream datapath = **`6.4 Gbps`** peak internal data-transfer bandwidth.
-- **Pipeline Stages:**
-  1. `csr_regs` — AXI4-Lite slave (`0x00 CTRL`, `0x04 STATUS`, `0x08 PKT_CNT`, `0x0C LAST_CRC`)
-  2. `axis_skid_fifo` — 128-bit × 16-deep synchronous AXI4-Stream FIFO for backpressure isolation
-  3. `scrambler_128b` — 128-bit parallel LFSR scrambler ($x^{31} + x^{28} + 1$)
-  4. `crc32_128b` — 128-bit parallel IEEE 802.3 CRC-32 generator (16 bytes/cycle)
-  5. `fec_conv_enc` — Parallel Rate-1/2 convolutional FEC encoder ($K=7$, $G_0=171_8$, $G_1=133_8$) with bypass
-  6. `qam_mapper_axis` — Configurable QPSK / 16-QAM / 64-QAM Gray-coded I/Q symbol mapper or raw 128-bit passthrough
 
-## Quick Start (Local Ubuntu 24.04 + `~/.venvs/cocotb19`)
+To achieve multi-gigabit on-chip throughput within GF180MCU's 50 MHz digital timing envelope, `tx_6g_baseband_top` widens the internal **AXI4-Stream** datapath to **128 bits** (`128-bit × 50 MHz = 6.4 Gbps` peak internal bandwidth) across five registered pipeline stages with full `valid/ready` backpressure support.
 
-### 1. Run Cocotb Verification (Icarus / Verilator)
-```bash
-source ~/.venvs/cocotb19/bin/activate
-cd tb
-make SIM=icarus
-make SIM=verilator
-```
+```mermaid
+flowchart LR
+    AXIL["s_axil (AXI4-Lite)"] --> CSR["csr_regs\nCTRL · STATUS · PKT_CNT · LAST_CRC"]
+    SIN["s_axis (128-bit)"] --> FIFO["axis_skid_fifo\n16 x 128-bit"]
+    FIFO --> SCRAM["scrambler_128b\nx^31 + x^28 + 1"]
+    SCRAM --> CRC["crc32_128b\nBalanced GF(2) IEEE 802.3"]
+    CRC --> FEC["fec_conv_enc\nRate-1/2 (K=7)"]
+    FEC --> QAM["qam_mapper_axis\nRaw / QPSK / 16-QAM / 64-QAM"]
+    QAM --> MOUT["m_axis (128-bit)"]
+    CSR -.-> SCRAM
+    CSR -.-> FEC
+    CSR -.-> QAM
+Physical Design & Signoff Metrics (gf180mcuD)MetricValueStatusPDK / Standard Cellsgf180mcuD / gf180mcu_fd_sc_mcu7t5v0—Target Clock / Period50 MHz (20.0 ns)—Peak On-Chip Throughput6.4 Gbps (128-bit × 50 MHz)—Die Area945,812 µm² (0.946 mm²)—Core Area900,980 µm² (0.901 mm²)—Instance Count44,345 cells—Core Utilization56.85%—Total Wirelength982,324 µm—Setup WNS (nom_tt_025C_5v00)0.000 nsPASSHold WNS (nom_tt_025C_5v00)0.000 nsPASSMagic DRC0 errorsPASSNetgen LVSCleanPASSAntenna Violations0 netsPASSCocotb 1.9.2 (Icarus & Verilator)2/2 testsPASSAXI4-Lite Register Map (csr_regs)OffsetRegisterAccessDescription0x00CTRLRW[0] enable, [1] soft_rst, [2] bypass_scram, [3] bypass_fec, [5:4] qam_mode (00=Raw, 01=QPSK, 10=16-QAM, 11=64-QAM)0x04STATUSRO[0] tx_busy, [1] fifo_full, [2] fifo_empty0x08PKT_CNTRO32-bit completed frame counter (m_axis_tvalid && m_axis_tready && m_axis_tlast)0x0CLAST_CRCROLatched IEEE 802.3 CRC-32 checksum of the most recent frameQuick Start1. Run Cocotb Verification (Icarus / Verilator)Bashsource ~/.venvs/cocotb19/bin/activate
+make -C tb SIM=icarus
+make -C tb SIM=verilator
+2. Run LibreLane RTL-to-GDSII (gf180mcuD)Bashnix run --extra-experimental-features "nix-command flakes" github:librelane/librelane -- --pdk gf180mcuD librelane/config.json
+EOFgit add assets/tx_6g_baseband_top.png README.md
+git commit -m "docs: add GDSII layout render, Mermaid diagram, and signoff metrics to README"
+git push
+cat << 'EOF' > README.md
+# gf180-6g-baseband-tx
 
-### 2. Run LibreLane RTL-to-GDSII (`gf180mcuD`)
-```bash
-librelane --pdk gf180mcuD librelane/config.json
-```
+[[https://github.com/nk-verif-labs/gf180-6g-baseband-tx/actions/workflows/ci.yml/badge.svg]](https://github.com/nk-verif-labs/gf180-6g-baseband-tx/actions/workflows/ci.yml)
+
+**6.4 Gbps On-Chip 6G Baseband & High-Throughput Data-Transfer Engine** targeting **GlobalFoundries GF180MCU (`gf180mcuD`)** via **LibreLane**.
+
+[assets/tx_6g_baseband_top.png]
+
+## Architecture Overview
+
+To achieve multi-gigabit on-chip throughput within GF180MCU's 50 MHz digital timing envelope, `tx_6g_baseband_top` widens the internal **AXI4-Stream** datapath to **128 bits** (`128-bit × 50 MHz = 6.4 Gbps` peak internal bandwidth) across five registered pipeline stages with full `valid/ready` backpressure support.
+
+```mermaid
+flowchart LR
+    AXIL["s_axil (AXI4-Lite)"] --> CSR["csr_regs\nCTRL · STATUS · PKT_CNT · LAST_CRC"]
+    SIN["s_axis (128-bit)"] --> FIFO["axis_skid_fifo\n16 x 128-bit"]
+    FIFO --> SCRAM["scrambler_128b\nx^31 + x^28 + 1"]
+    SCRAM --> CRC["crc32_128b\nBalanced GF(2) IEEE 802.3"]
+    CRC --> FEC["fec_conv_enc\nRate-1/2 (K=7)"]
+    FEC --> QAM["qam_mapper_axis\nRaw / QPSK / 16-QAM / 64-QAM"]
+    QAM --> MOUT["m_axis (128-bit)"]
+    CSR -.-> SCRAM
+    CSR -.-> FEC
+    CSR -.-> QAM
+Physical Design & Signoff Metrics (gf180mcuD)MetricValueStatusPDK / Standard Cellsgf180mcuD / gf180mcu_fd_sc_mcu7t5v0—Target Clock / Period50 MHz (20.0 ns)—Peak On-Chip Throughput6.4 Gbps (128-bit × 50 MHz)—Die Area945,812 µm² (0.946 mm²)—Core Area900,980 µm² (0.901 mm²)—Instance Count44,345 cells—Core Utilization56.85%—Total Wirelength982,324 µm—Setup WNS (nom_tt_025C_5v00)0.000 nsPASSHold WNS (nom_tt_025C_5v00)0.000 nsPASSMagic DRC0 errorsPASSNetgen LVSCleanPASSAntenna Violations0 netsPASSCocotb 1.9.2 (Icarus & Verilator)2/2 testsPASSAXI4-Lite Register Map (csr_regs)OffsetRegisterAccessDescription0x00CTRLRW[0] enable, [1] soft_rst, [2] bypass_scram, [3] bypass_fec, [5:4] qam_mode (00=Raw, 01=QPSK, 10=16-QAM, 11=64-QAM)0x04STATUSRO[0] tx_busy, [1] fifo_full, [2] fifo_empty0x08PKT_CNTRO32-bit completed frame counter (m_axis_tvalid && m_axis_tready && m_axis_tlast)0x0CLAST_CRCROLatched IEEE 802.3 CRC-32 checksum of the most recent frameQuick Start1. Run Cocotb Verification (Icarus / Verilator)Bashsource ~/.venvs/cocotb19/bin/activate
+make -C tb SIM=icarus
+make -C tb SIM=verilator
+2. Run LibreLane RTL-to-GDSII (gf180mcuD)Bashnix run --extra-experimental-features "nix-command flakes" github:librelane/librelane -- --pdk gf180mcuD librelane/config.json
