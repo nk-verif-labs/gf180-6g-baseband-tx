@@ -4,7 +4,7 @@
 
 **6.4 Gbps On-Chip 6G Baseband & High-Throughput Data-Transfer Engine** targeting **GlobalFoundries GF180MCU (`gf180mcuD`)** via **LibreLane**.
 
-[assets/tx_6g_baseband_top.png]
+<p align="center"><img src="assets/tx_6g_baseband_top.png" alt="tx_6g_baseband_top GDSII Layout" width="720"></p>
 
 ## Architecture Overview
 
