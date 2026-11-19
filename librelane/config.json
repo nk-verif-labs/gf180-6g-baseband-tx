@@ -1,0 +1,24 @@
+{
+  "DESIGN_NAME": "tx_6g_baseband_top",
+  "VERILOG_FILES": [
+    "dir::../rtl/csr_regs.v",
+    "dir::../rtl/axis_skid_fifo.v",
+    "dir::../rtl/scrambler_128b.v",
+    "dir::../rtl/crc32_128b.v",
+    "dir::../rtl/fec_conv_enc.v",
+    "dir::../rtl/qam_mapper_axis.v",
+    "dir::../rtl/tx_6g_baseband_top.v"
+  ],
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 20.0,
+  "PDK": "gf180mcuD",
+  "STD_CELL_LIBRARY": "gf180mcu_fd_sc_mcu7t5v0",
+  "FP_SIZING": "relative",
+  "FP_CORE_UTIL": 45,
+  "PL_TARGET_DENSITY_PCT": 55,
+  "FP_PIN_ORDER_CFG": "dir::pin_order.cfg",
+  "DRT_THREADS": 4,
+  "RUN_KLAYOUT_XOR": true,
+  "RUN_MAGIC_DRC": true,
+  "RUN_LVS": true
+}

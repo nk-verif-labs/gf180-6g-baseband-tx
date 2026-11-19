@@ -1,0 +1,35 @@
+name: CI - Cocotb Dual-Sim & LibreLane GF180MCU
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  cocotb-sim:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        sim: [icarus, verilator]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Simulators & Cocotb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog verilator python3-pip
+          pip install --break-system-packages cocotb==1.9.2 pytest
+      - name: Run Cocotb (${{ matrix.sim }})
+        working-directory: tb
+        run: make SIM=${{ matrix.sim }}
+
+  librelane-gf180:
+    runs-on: ubuntu-24.04
+    needs: cocotb-sim
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run LibreLane RTL-to-GDSII (gf180mcuD)
+        uses: librelane/librelane-action@v1
+        with:
+          config: librelane/config.json
+          pdk: gf180mcuD

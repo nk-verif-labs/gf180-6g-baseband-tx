@@ -1,0 +1,7 @@
+librelane/runs/
+tb/sim_build/
+tb/results.xml
+__pycache__/
+*.pyc
+*.vcd
+*.fst
