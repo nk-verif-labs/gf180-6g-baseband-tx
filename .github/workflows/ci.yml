@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run LibreLane RTL-to-GDSII (gf180mcuD)
-        uses: librelane/librelane-action@v1
+        uses: fossi-foundation/librelane-action@v0.1
         with:
-          config: librelane/config.json
-          pdk: gf180mcuD
+          arguments: --pdk gf180mcuD librelane/config.json
+          branch: main
