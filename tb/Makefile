@@ -17,3 +17,12 @@ EXTRA_ARGS += --Wall -Wno-DECLFILENAME -Wno-UNUSEDSIGNAL
 endif
 
 include $(shell cocotb-config --makefiles)/Makefile.sim
+
+GL_NL ?= ../librelane/runs/latest/final/nl/tx_6g_baseband_top.nl.v
+PDK_SC_V ?= $(PDK_ROOT)/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog
+
+.PHONY: sim-gl
+sim-gl:
+	$(MAKE) SIM=icarus \
+	  VERILOG_SOURCES="$(PDK_SC_V)/primitives.v $(PDK_SC_V)/gf180mcu_fd_sc_mcu7t5v0.v $(GL_NL)" \
+	  COMPILE_ARGS="-DFUNCTIONAL -DUNIT_DELAY=#1 -DUSE_POWER_PINS=0"
