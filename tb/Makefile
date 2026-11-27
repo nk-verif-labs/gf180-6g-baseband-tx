@@ -23,6 +23,7 @@ PDK_SC_V ?= $(PDK_ROOT)/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilog
 
 .PHONY: sim-gl
 sim-gl:
+	$(MAKE) clean SIM=icarus
 	$(MAKE) SIM=icarus \
-	  VERILOG_SOURCES="$(PDK_SC_V)/primitives.v $(PDK_SC_V)/gf180mcu_fd_sc_mcu7t5v0.v $(GL_NL)" \
+	  VERILOG_SOURCES="./timescale.v $(PDK_SC_V)/primitives.v $(PDK_SC_V)/gf180mcu_fd_sc_mcu7t5v0.v $(GL_NL)" \
 	  COMPILE_ARGS="-DFUNCTIONAL -DUNIT_DELAY=#1 -DUSE_POWER_PINS=0"
